@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dynamic_link_example/product_detail_screen.dart';
+import 'package:dynamic_link_example/story_screen.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -106,6 +107,63 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: 10,
               ),
+
+
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: const [
+                    Text("Advertisment",style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.bold),),
+
+                  ],
+                ),
+              ),
+
+
+              Container(
+                width: Get.width,
+                height: Get.width*0.2,
+                margin: EdgeInsets.only(left: 10),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance.collection('ads').snapshots(),
+                  builder: (ctx,snapshot){
+                    if(!snapshot.hasData){
+                      return Center(child: CircularProgressIndicator(),);
+                    }
+
+                    List<DocumentSnapshot> ads = snapshot.data!.docs;
+
+                    return ListView.builder(itemBuilder: (ctx,index){
+
+                      String image = ads[index].get('image');
+
+                      return InkWell(
+                        onTap: (){
+
+                          Get.to(()=> StoryScreen(image, 'image'));
+
+                        },
+                        child: Container(
+                          width: Get.width*0.15,
+                          height: Get.width*0.15,
+                          margin: EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                              color: Colors.blue,
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: NetworkImage(image,),
+                                  fit: BoxFit.contain
+                              )
+
+                          ),
+                        ),
+                      );
+                    },itemCount: ads.length,scrollDirection: Axis.horizontal,);
+                  },
+                ),
+
+              ),
+
 
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),

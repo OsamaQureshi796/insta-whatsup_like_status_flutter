@@ -26,6 +26,10 @@ class ProductDetailScreen extends StatelessWidget {
 
       body: Column(
         children: [
+
+
+
+
           Container(
             child: StreamBuilder<DocumentSnapshot>(
               stream: FirebaseFirestore.instance.collection('ads').doc(productId).snapshots(),
